@@ -5,10 +5,19 @@ import { db } from '../firebase';
 import Navbar from './Navbar';
 import Carrito from './Carrito';
 
-const ProductosComponent = () => {
+const ProductosComponent = ({ tipoFiltro }) => {
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState({});
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
+  const [busqueda, setBusqueda] = useState('');
+
+  const productosFiltrados = productos.filter((producto) =>
+    (!tipoFiltro || producto.tipo.toLowerCase() === tipoFiltro.toLowerCase())
+  );
+
+  console.log('Tipo de filtro:', tipoFiltro);
+  console.log('Productos filtrados:', productosFiltrados);
+
 
   const obtenerProductoEnCarrito = (idProducto) => {
     return carrito[idProducto];
@@ -67,17 +76,26 @@ const ProductosComponent = () => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     const obtenerProductos = async () => {
       const productosCollection = collection(db, 'Productos');
+      const snackCollection = collection(db, 'snack');
 
       try {
         const productosSnapshot = await getDocs(productosCollection);
+        const snackSnapshot = await getDocs(snackCollection);
+
         const nuevosProductos = productosSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setProductos(nuevosProductos);
+
+        const nuevosSnacks = snackSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setProductos([...nuevosProductos, ...nuevosSnacks]);
       } catch (error) {
         console.error('Error al obtener productos:', error);
       }
@@ -86,13 +104,18 @@ const ProductosComponent = () => {
     obtenerProductos();
   }, []);
 
+
   return (
     <div>
-      <Navbar onCarritoClick={toggleCarrito} cantidadEnCarrito={Object.values(carrito).reduce((total, item) => total + item.cantidad, 0)}/>
+      <Navbar
+        onCarritoClick={toggleCarrito}
+        cantidadEnCarrito={Object.values(carrito).reduce((total, item) => total + item.cantidad, 0)}
+        onBuscarChange={(valor) => setBusqueda(valor)}
+      />
       <h2>Lista de Productos</h2>
       <ul>
-        {productos.map(producto => (
-            <li key={producto.id}>
+      {productosFiltrados.map((producto) => (
+          <li key={producto.id}>
               <p>Nombre: {producto.nombre}</p>
               <p>Precio: {producto.precio}</p>
               <p>Tamaño: {producto.tamano}</p>

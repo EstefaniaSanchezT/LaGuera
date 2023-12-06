@@ -1,0 +1,33 @@
+/* styles.css (o el nombre que prefieras) */
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #333; /* Cambia el color de fondo según tus preferencias */
+    color: white; /* Cambia el color del texto según tus preferencias */
+  }
+  
+  nav h3 {
+    margin: 0;
+  }
+  
+  nav div {
+    display: flex;
+    align-items: center;
+  }
+  
+  nav a {
+    color: white; /* Cambia el color del enlace según tus preferencias */
+    text-decoration: none;
+    margin: 0 10px; /* Ajusta el margen entre los elementos de la Navbar */
+  }
+  
+  nav input {
+    padding: 5px;
+    margin-right: 10px; /* Ajusta el margen del campo de búsqueda */
+  }
+  
+  /* Añade más estilos según tus necesidades */
+  
