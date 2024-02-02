@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { PayPalButton } from 'react-paypal-button-v2';
+import '../styles/carrito.css'
 
 const Carrito = ({ carrito, onEliminarProducto, onRealizarCompra }) => {
   useEffect(() => {
@@ -19,7 +20,7 @@ const Carrito = ({ carrito, onEliminarProducto, onRealizarCompra }) => {
   };
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '10px', position: 'absolute', right: '10px', top: '60px', background: '#fff' }}>
+    <div className='compras' style={{ border: '1px solid #ccc', padding: '10px', position: 'absolute', right: '10px', top: '60px', background: '#fff' }}>
       <h3>Carrito de Compras</h3>
       <ul>
         {carrito.map((item, index) => (
@@ -27,7 +28,7 @@ const Carrito = ({ carrito, onEliminarProducto, onRealizarCompra }) => {
             <p>Nombre: {item.producto.nombre}</p>
             <p>Precio: ${item.producto.precio}</p>
             <p>Cantidad: {item.cantidad}</p>
-            <button onClick={() => onEliminarProducto(item.producto.id)}>Eliminar</button>
+            <button className='Button' onClick={() => onEliminarProducto(item.producto.id)}>Eliminar</button>
           </li>
         ))}
       </ul>

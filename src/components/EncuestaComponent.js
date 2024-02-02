@@ -14,8 +14,9 @@ const EncuestaComponent = ({ onRespuestasSubmit, onCerrarEncuesta }) => {
     leche: false,
     pepino: false,
   });
-
+  
   const handleRespuestaToggle = (ingrediente) => {
+    // Lógica para alternar el valor del ingrediente en el estado
     setRespuestas((prevRespuestas) => ({
       ...prevRespuestas,
       [ingrediente]: !prevRespuestas[ingrediente],
@@ -23,10 +24,12 @@ const EncuestaComponent = ({ onRespuestasSubmit, onCerrarEncuesta }) => {
   };
 
   const handleRespuestasSubmit = () => {
-
+    // Lógica para procesar las respuestas y enviarlas al componente principal
     onRespuestasSubmit(respuestas);
-
+    // Cerrar la ventana emergente (modal)
     onCerrarEncuesta();
+    // Marcar que la encuesta ha sido completada
+    localStorage.setItem('encuestaCompletada', 'true');
   };
 
   return (

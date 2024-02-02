@@ -7,7 +7,7 @@ const Navbar = ({ onCarritoClick, cantidadEnCarrito, onBuscarChange }) => {
   return (
     <nav style={{ display: 'flex', justifyContent: 'space-between', padding: '10px' }}>
       <h3>La guera</h3>
-        <div>
+        <div className='borderXwidth'>
         <Link to="/">Inicio</Link>
         <Link to="/tipo/Licuado">Licuados</Link>
         <Link to="/tipo/Jugo">Jugos</Link>
@@ -25,11 +25,11 @@ const Navbar = ({ onCarritoClick, cantidadEnCarrito, onBuscarChange }) => {
             onBuscarChange(e.target.value);
           }}
         />
-        <dv>
+        <div>
         <span role="img" aria-label="Carrito de Compras" onClick={onCarritoClick}>
           🛒 {cantidadEnCarrito > 0 && `(${cantidadEnCarrito})`}
         </span>
-        </dv>
+        </div>
       </div>
     </nav>
   );

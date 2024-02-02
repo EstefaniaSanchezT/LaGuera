@@ -4,6 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import Navbar from './Navbar';
 import Carrito from './Carrito';
+import '../styles/ProductosComponent.css'
 
 const ProductosComponent = ({ tipoFiltro }) => {
   const [productos, setProductos] = useState([]);
@@ -11,14 +12,13 @@ const ProductosComponent = ({ tipoFiltro }) => {
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [busqueda, setBusqueda] = useState('');
 
-  const productosFiltrados = productos.filter((producto) =>
-    (!tipoFiltro || producto.tipo.toLowerCase() === tipoFiltro.toLowerCase())
-  );
-
-  console.log('Tipo de filtro:', tipoFiltro);
-  console.log('Productos filtrados:', productosFiltrados);
-
-
+  const productosFiltrados = productos.filter((producto) => {
+    const nombreLowerCase = producto.nombre ? producto.nombre.toLowerCase() : '';
+    return (
+      (!tipoFiltro || producto.tipo.toLowerCase() === tipoFiltro.toLowerCase()) &&
+      nombreLowerCase.includes(busqueda.toLowerCase())
+    );
+  });
   const obtenerProductoEnCarrito = (idProducto) => {
     return carrito[idProducto];
   };
@@ -76,7 +76,7 @@ const ProductosComponent = ({ tipoFiltro }) => {
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     const obtenerProductos = async () => {
       const productosCollection = collection(db, 'Productos');
       const snackCollection = collection(db, 'snack');
@@ -85,12 +85,12 @@ useEffect(() => {
         const productosSnapshot = await getDocs(productosCollection);
         const snackSnapshot = await getDocs(snackCollection);
 
-        const nuevosProductos = productosSnapshot.docs.map(doc => ({
+        const nuevosProductos = productosSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
 
-        const nuevosSnacks = snackSnapshot.docs.map(doc => ({
+        const nuevosSnacks = snackSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
@@ -104,7 +104,6 @@ useEffect(() => {
     obtenerProductos();
   }, []);
 
-
   return (
     <div>
       <Navbar
@@ -112,19 +111,23 @@ useEffect(() => {
         cantidadEnCarrito={Object.values(carrito).reduce((total, item) => total + item.cantidad, 0)}
         onBuscarChange={(valor) => setBusqueda(valor)}
       />
-      <h2>Lista de Productos</h2>
-      <ul>
-      {productosFiltrados.map((producto) => (
-          <li key={producto.id}>
-              <p>Nombre: {producto.nombre}</p>
-              <p>Precio: {producto.precio}</p>
-              <p>Tamaño: {producto.tamano}</p>
-              <p>Tipo: {producto.tipo}</p>
-              <p>Ingredientes: {producto.ingredientes}</p>
-              <img src={producto.imagen} alt={`Imagen de ${producto.nombre}`} />
-              <button onClick={() => agregarAlCarrito(producto)}>Agregar al Carrito</button>
-            </li>
-          ))}
+      <h2 className='listaProductos'>Lista de Productos</h2>
+      <ul className='principal'>
+        {productosFiltrados.map((producto) => (
+          
+          <li key={producto.id} className='Card'>
+    
+            <p className='tituloTarjeta'>{producto.nombre}</p>
+            <p className='textoTarjeta'>Precio: {producto.precio}</p>
+            <p className='textoTarjeta'>Tamaño: {producto.tamano}</p>
+            <p className='textoTarjeta'>Tipo: {producto.tipo}</p>
+            <p className='textoTarjeta' id="ingredientes">Ingredientes: {producto.ingredientes}</p>
+            <div className='container'>
+            <img className='imagen' src={producto.img} alt={`Imagen de ${producto.nombre}`} />
+            <button onClick={() => agregarAlCarrito(producto)} className='Button'>Agregar al Carrito</button>
+            </div>
+          </li>
+        ))}
       </ul>
       {mostrarCarrito && <Carrito carrito={Object.values(carrito)} onEliminarProducto={eliminarDelCarrito} />}
     </div>
